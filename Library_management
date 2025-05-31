@@ -1,21 +1,82 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
+import javax.swing.*;
 
-public class Library_management extends JFrame implements ActionListener 
-{
+public class AdminLogin extends JFrame {
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+
+    public AdminLogin() {
+        setTitle("Admin Login");
+        setSize(350, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(245, 245, 245));
+        add(panel);
+        placeComponents(panel);
+
+        setVisible(true);
+    }
+
+    private void placeComponents(JPanel panel) {
+        panel.setLayout(null);
+
+        JLabel userLabel = new JLabel("Admin ID:");
+        userLabel.setBounds(10, 20, 80, 25);
+        panel.add(userLabel);
+
+        usernameField = new JTextField(20);
+        usernameField.setBounds(100, 20, 165, 25);
+        panel.add(usernameField);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(10, 50, 80, 25);
+        panel.add(passwordLabel);
+
+        passwordField = new JPasswordField(20);
+        passwordField.setBounds(100, 50, 165, 25);
+        panel.add(passwordField);
+
+        JButton loginButton = new JButton("Login");
+        loginButton.setBounds(100, 90, 80, 25);
+        loginButton.setBackground(new Color(0, 102, 204));
+        loginButton.setForeground(Color.WHITE);
+        panel.add(loginButton);
+
+        loginButton.addActionListener(e -> {
+            String user = usernameField.getText();
+            String password = String.valueOf(passwordField.getPassword());
+
+            if (user.equals("admin") && password.equals("admin123")) {
+                dispose(); 
+                new Library_management();
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid Login");
+            }
+        });
+    }
+
+    public static void main(String[] args) 
+    {
+        new AdminLogin();
+    }
+}
+
+class Library_management extends JFrame implements ActionListener {
     private JLabel label1, label2, label3, label4, label5, label6, label7;
     private JTextField textField1, textField2, textField3, textField4, textField5, textField6, textField7;
-    private JButton addButton, viewButton, editButton, deleteButton, clearButton,exitButton;
+    private JButton addButton, viewButton, editButton, deleteButton, clearButton, exitButton;
     private JPanel panel;
-    private ArrayList<String[]> books = new ArrayList<String[]>();
+    private ArrayList<String[]> books = new ArrayList<>();
 
-    public Library_management() 
-    {
+    public Library_management() {
         setTitle("Library Management System");
         setSize(600, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         label1 = new JLabel(" Book ID");
         label2 = new JLabel(" Book Title");
@@ -38,7 +99,7 @@ public class Library_management extends JFrame implements ActionListener
         editButton = new JButton("Edit");
         deleteButton = new JButton("Delete");
         clearButton = new JButton("Clear");
-        exitButton=new JButton("Exit");
+        exitButton = new JButton("Exit");
 
         addButton.addActionListener(this);
         viewButton.addActionListener(this);
@@ -47,7 +108,7 @@ public class Library_management extends JFrame implements ActionListener
         clearButton.addActionListener(this);
         exitButton.addActionListener(this);
 
-        panel = new JPanel(new GridLayout(10,2));
+        panel = new JPanel(new GridLayout(10, 2, 5, 5));
         panel.add(label1);
         panel.add(textField1);
         panel.add(label2);
@@ -69,12 +130,11 @@ public class Library_management extends JFrame implements ActionListener
         panel.add(clearButton);
         panel.add(exitButton);
 
-
         add(panel);
         setVisible(true);
     }
-    public void actionPerformed(ActionEvent e) 
-    {
+
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
             String[] book = new String[7];
             book[0] = textField1.getText();
@@ -87,27 +147,20 @@ public class Library_management extends JFrame implements ActionListener
             books.add(book);
             JOptionPane.showMessageDialog(this, "Book added successfully");
             clearFields();
-        }
-        else if (e.getSource() == viewButton) {
+        } else if (e.getSource() == viewButton) {
             String[] columns = {"Book ID", "Book Title", "Author", "Publisher", "Year of Publication", "ISBN", "Number of Copies"};
             Object[][] data = new Object[books.size()][7];
             for (int i = 0; i < books.size(); i++) {
-                data[i][0] = books.get(i)[0];
-                data[i][1] = books.get(i)[1];
-                data[i][2] = books.get(i)[2];
-                data[i][3] = books.get(i)[3];
-                data[i][4] = books.get(i)[4];
-                data[i][5] = books.get(i)[5];
-                data[i][6] = books.get(i)[6];
+                System.arraycopy(books.get(i), 0, data[i], 0, 7);
             }
             JTable table = new JTable(data, columns);
             JScrollPane scrollPane = new JScrollPane(table);
             JFrame frame = new JFrame("View Books");
             frame.add(scrollPane);
             frame.setSize(800, 400);
+            frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        }
-        else if (e.getSource() == editButton) {
+        } else if (e.getSource() == editButton) {
             String bookID = JOptionPane.showInputDialog(this, "Enter book ID to edit:");
             for (int i = 0; i < books.size(); i++) {
                 if (books.get(i)[0].equals(bookID)) {
@@ -126,8 +179,7 @@ public class Library_management extends JFrame implements ActionListener
                 }
             }
             JOptionPane.showMessageDialog(this, "Book not found");
-        }
-        else if (e.getSource() == deleteButton) {
+        } else if (e.getSource() == deleteButton) {
             String bookID = JOptionPane.showInputDialog(this, "Enter book ID to delete:");
             for (int i = 0; i < books.size(); i++) {
                 if (books.get(i)[0].equals(bookID)) {
@@ -138,25 +190,20 @@ public class Library_management extends JFrame implements ActionListener
                 }
             }
             JOptionPane.showMessageDialog(this, "Book not found");
-        }
-        else if (e.getSource() == clearButton) {
+        } else if (e.getSource() == clearButton) {
             clearFields();
-        }
-        else if (e.getSource() == exitButton) {
+        } else if (e.getSource() == exitButton) {
             System.exit(0);
         }
     }
-    private void clearFields() {
-    textField1.setText("");
-    textField2.setText("");
-    textField3.setText("");
-    textField4.setText("");
-    textField5.setText("");
-    textField6.setText("");
-    textField7.setText("");
-    }
 
-    public static void main(String[] args) {
-        new Library_management();
+    private void clearFields() {
+        textField1.setText("");
+        textField2.setText("");
+        textField3.setText("");
+        textField4.setText("");
+        textField5.setText("");
+        textField6.setText("");
+        textField7.setText("");
     }
 }
