@@ -131,6 +131,10 @@ class Library_management extends JFrame implements ActionListener {
         panel.add(exitButton);
 
         add(panel);
+        panel.setBackground(new Color(230, 242, 255)); 
+
+        label1.setForeground(new Color(0, 51, 102)); 
+        
         setVisible(true);
     }
 
@@ -155,11 +159,13 @@ class Library_management extends JFrame implements ActionListener {
             }
             JTable table = new JTable(data, columns);
             JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.getViewport().setBackground(new Color(230, 242, 255));
             JFrame frame = new JFrame("View Books");
             frame.add(scrollPane);
             frame.setSize(800, 400);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
+            
         } else if (e.getSource() == editButton) {
             String bookID = JOptionPane.showInputDialog(this, "Enter book ID to edit:");
             for (int i = 0; i < books.size(); i++) {
